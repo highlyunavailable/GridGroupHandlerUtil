@@ -107,7 +107,7 @@ namespace GridGroupHandlerUtil
             OnGridGroupChanged(oldGroup);
         }
 
-        protected virtual void OnGridAddedToGroup(IMyCubeGrid grid, IMyGridGroupData oldGroup) { }
+        protected virtual void OnGridAddedToGroup(IMyCubeGrid otherGrid, IMyGridGroupData otherGridOldGroup) { }
 
         private void GridGroup_OnGridAdded(IMyGridGroupData newGroup, IMyCubeGrid grid, IMyGridGroupData oldGroup)
         {
@@ -121,7 +121,7 @@ namespace GridGroupHandlerUtil
             }
         }
 
-        protected virtual void OnGridRemovedFromGroup(IMyCubeGrid grid, IMyGridGroupData newGroup) { }
+        protected virtual void OnGridRemovedFromGroup(IMyCubeGrid otherGrid, IMyGridGroupData otherGridNewGroup) { }
         protected virtual void OnGridGroupChanged(IMyGridGroupData oldGroup) { }
 
         private void GridGroup_OnGridRemoved(IMyGridGroupData oldGroup, IMyCubeGrid grid, IMyGridGroupData newGroup)

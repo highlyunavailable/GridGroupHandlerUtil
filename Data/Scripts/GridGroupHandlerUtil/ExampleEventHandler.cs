@@ -10,7 +10,7 @@ using VRage.Utils;
 
 namespace GridGroupHandlerUtil
 {
-    internal class ExampleEventHandler : BlockCentricGridGroupNotifyingEventHandlerBase
+    internal class ExampleEventHandler : BlockCentricGridGroupNotifyingEventHandlerBase<Guid>
     {
         public readonly IMyDecoy decoyBlock;
         private readonly ExampleEntityComponent component;
@@ -21,6 +21,7 @@ namespace GridGroupHandlerUtil
         {
             decoyBlock = decoy;
             component = entityComponent;
+            Data = Guid.NewGuid();
         }
 
         protected override void OnGridAddedToGroup(IMyCubeGrid grid, IMyGridGroupData oldGroup)
@@ -42,7 +43,7 @@ namespace GridGroupHandlerUtil
 
         public override void OnBlockEnteredGroup(IMyCubeBlock otherBlock)
         {
-            MyLog.Default.WriteLineAndConsole($"ExampleEventHandler ({decoyBlock?.DisplayNameText}): block {otherBlock?.DisplayNameText} has entered the grid group");
+            MyLog.Default.WriteLineAndConsole($"ExampleEventHandler ({decoyBlock?.DisplayNameText}): block {otherBlock?.DisplayNameText} has entered the grid group: Data: {Data}");
         }
 
         public override void OnBlockLeftGroup(IMyCubeBlock otherBlock)
