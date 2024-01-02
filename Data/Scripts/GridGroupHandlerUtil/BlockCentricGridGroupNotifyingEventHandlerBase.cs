@@ -15,6 +15,16 @@ namespace GridGroupHandlerUtil
 
         protected abstract Guid GetDataKey();
 
+        protected IReadOnlyCollection<BlockCentricGridGroupNotifyingEventHandlerBase> GetGroupBlocks()
+        {
+            HashSet<BlockCentricGridGroupNotifyingEventHandlerBase> data;
+            if (gridGroup.TryGetVariable(GetDataKey(), out data))
+            {
+                return data;
+            }
+            return Array.Empty<BlockCentricGridGroupNotifyingEventHandlerBase>();
+        }
+
         protected override void RemoveBlockEvents(IMyCubeBlock block)
         {
             base.RemoveBlockEvents(block);
