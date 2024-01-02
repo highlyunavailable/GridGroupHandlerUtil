@@ -15,8 +15,9 @@ namespace GridGroupHandlerUtil
         public readonly IMyDecoy decoyBlock;
         private readonly ExampleEntityComponent component;
         private static readonly Guid makeYourOwnGuid = new Guid("0e72d3d4-35cc-45d4-b6ba-691877bdc829");
+        protected override Guid GetDataKey() => makeYourOwnGuid;
 
-        public ExampleEventHandler(IMyDecoy decoy, ExampleEntityComponent entityComponent) : base(decoy, GridLinkTypeEnum.Physical, makeYourOwnGuid)
+        public ExampleEventHandler(IMyDecoy decoy, ExampleEntityComponent entityComponent) : base(decoy, GridLinkTypeEnum.Physical)
         {
             decoyBlock = decoy;
             component = entityComponent;
