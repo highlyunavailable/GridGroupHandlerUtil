@@ -14,8 +14,25 @@ namespace GridGroupHandlerUtil
         {
             dataKey = gridGroupDataKey;
 
+            AddToGridGroupDataAndNotify(gridGroup);
+        }
+
+        protected override void RemoveBlockEvents(IMyCubeBlock block)
+        {
+            base.RemoveBlockEvents(block);
+
+            if (gridGroup == null)
+            {
+                return;
+            }
+
+            RemoveFromGridGroupDataAndNotify(gridGroup);
+        }
+
+        private void AddToGridGroupDataAndNotify(IMyGridGroupData groupToNotify)
+        {
             HashSet<BlockCentricGridGroupNotifyingEventHandlerBase> data;
-            if (gridGroup.TryGetVariable(dataKey, out data))
+            if (groupToNotify.TryGetVariable(dataKey, out data))
             {
                 data.Add(this);
                 foreach (var otherHandler in data)
@@ -29,21 +46,14 @@ namespace GridGroupHandlerUtil
             }
             else
             {
-                gridGroup.SetVariable(dataKey, new HashSet<BlockCentricGridGroupNotifyingEventHandlerBase>() { this });
+                groupToNotify.SetVariable(dataKey, new HashSet<BlockCentricGridGroupNotifyingEventHandlerBase>() { this });
             }
         }
 
-        protected override void RemoveBlockEvents(IMyCubeBlock block)
+        private void RemoveFromGridGroupDataAndNotify(IMyGridGroupData groupToNotify)
         {
-            base.RemoveBlockEvents(block);
-
-            if (gridGroup == null)
-            {
-                return;
-            }
-
             HashSet<BlockCentricGridGroupNotifyingEventHandlerBase> data;
-            if (gridGroup.TryGetVariable(dataKey, out data))
+            if (groupToNotify.TryGetVariable(dataKey, out data))
             {
                 data.Remove(this);
                 if (block == null)
@@ -65,36 +75,12 @@ namespace GridGroupHandlerUtil
             base.OnGridGroupChanged(oldGroup);
             if (oldGroup != null)
             {
-                HashSet<BlockCentricGridGroupNotifyingEventHandlerBase> data;
-                if (oldGroup.TryGetVariable(dataKey, out data))
-                {
-                    data.Remove(this);
-                    foreach (var otherHandler in data)
-                    {
-                        otherHandler.OnBlockLeftGroup(block);
-                    }
-                }
+                RemoveFromGridGroupDataAndNotify(oldGroup);
             }
 
             if (gridGroup != null)
             {
-                HashSet<BlockCentricGridGroupNotifyingEventHandlerBase> data;
-                if (gridGroup.TryGetVariable(dataKey, out data))
-                {
-                    data.Add(this);
-                    foreach (var otherHandler in data)
-                    {
-                        if (otherHandler == this)
-                        {
-                            continue;
-                        }
-                        otherHandler.OnBlockEnteredGroup(block);
-                    }
-                }
-                else
-                {
-                    gridGroup.SetVariable(dataKey, new HashSet<BlockCentricGridGroupNotifyingEventHandlerBase>() { this });
-                }
+                AddToGridGroupDataAndNotify(gridGroup);
             }
         }
     }
