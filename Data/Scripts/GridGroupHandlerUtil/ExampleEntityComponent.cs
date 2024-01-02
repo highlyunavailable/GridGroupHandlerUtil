@@ -2,6 +2,7 @@
 using Sandbox.ModAPI;
 using System;
 using VRage.Game.Components;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRage.ObjectBuilders;
 using VRage.Utils;
@@ -21,15 +22,19 @@ namespace GridGroupHandlerUtil
 
         public override void UpdateOnceBeforeFrame()
         {
-            base.UpdateOnceBeforeFrame();
+            // Ignore ghost grids
+            if ((Entity as IMyCubeBlock)?.CubeGrid?.Physics == null)
+            {
+                return;
+            }
 
             var decoy = Entity as IMyDecoy;
             handler = new ExampleEventHandler(Entity as IMyDecoy, this);
+            MyLog.Default.WriteLineAndConsole("ExampleEntityComponent: Created a grid group event handler!");
         }
 
         public override void MarkForClose()
         {
-            base.MarkForClose();
             handler?.Close();
             handler = null;
         }
